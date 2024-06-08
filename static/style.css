@@ -1,0 +1,7 @@
+.logger {
+    overflow-y: scroll;
+    min-height: 512px;
+    max-height: 512px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
