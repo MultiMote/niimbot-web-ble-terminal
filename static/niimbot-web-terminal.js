@@ -72,6 +72,7 @@
     const connect = async () => {
         const options = {
             filters: [
+                { namePrefix: "B" },
                 { namePrefix: "D" },
                 { services: [SERVICE_UUID] }
             ]
