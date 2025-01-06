@@ -6,7 +6,15 @@
     const disconnectButton = document.querySelector('.disconnect');
     const logArea = document.querySelector('.logger');
     const sendHexButton = document.querySelector('.send-hex');
+    const sendConstructedButton = document.querySelector('.send-construct');
     const hexInput = document.querySelector('.hex-command');
+
+    const constructElements = {
+        size: document.querySelector('.construct-size'),
+        command: document.querySelector('.construct-command'),
+        data: document.querySelector('.construct-data'),
+        checksum: document.querySelector('.construct-checksum'),
+    };
 
     let gattServer = null;
     let channel = null;
@@ -17,11 +25,13 @@
             disconnectButton.removeAttribute("disabled");
             hexInput.removeAttribute("disabled");
             sendHexButton.removeAttribute("disabled");
+            sendConstructedButton.removeAttribute("disabled");
         } else {
             disconnectButton.setAttribute("disabled", "");
             connectButton.removeAttribute("disabled");
             hexInput.setAttribute("disabled", "");
             sendHexButton.setAttribute("disabled", "");
+            sendConstructedButton.setAttribute("disabled", "");
         }
     }
 
@@ -38,11 +48,33 @@
             }
         } else if (buf instanceof Uint8Array) {
             arr = Array.from(buf);
+        } else {
+            arr = buf;
         }
+
+        console.log(arr)
 
         return arr.map(
             (i) => i.toString(16).padStart(2, "0").toUpperCase()
         ).join(" ");
+    }
+
+    const hexToBuf = (value) => {
+        if (!value) {
+            return new Uint8Array();
+        }
+
+        const match = value.match(/[\da-f]{2}/gi);
+
+        if (!match) {
+            return new Uint8Array();
+        }
+
+        const bytes = new Uint8Array(match.map((h) => {
+            return parseInt(h, 16)
+        }));
+
+        return bytes;
     }
 
     const logger = (text) => {
@@ -68,6 +100,14 @@
             channel = null;
         }
     };
+
+    const updateChecksum = () => {
+        let checksum = 0;
+        hexToBuf(constructElements.command.value).forEach((i) => (checksum ^= i));
+        hexToBuf(constructElements.size.value).forEach((i) => (checksum ^= i));
+        hexToBuf(constructElements.data.value).forEach((i) => (checksum ^= i));
+        constructElements.checksum.value = bufToHex([checksum & 0xff ]);
+    }
 
     const connect = async () => {
         const options = {
@@ -126,27 +166,35 @@
 
     const sendHex = async () => {
         if (channel === null) {
-            return
-        }
-
-        const value = document.querySelector('.hex-command').value;
-
-        if (!value) {
             return;
         }
 
-        const match = value.match(/[\da-f]{2}/gi);
+        const bytes = hexToBuf(hexInput.value);
 
-        if (!match) {
+        if (!bytes.length == 0) {
             return;
         }
-
-        const bytes = new Uint8Array(match.map((h) => {
-            return parseInt(h, 16)
-        }));
 
         logger(`>> ${bufToHex(bytes)}`);
         await channel.writeValueWithoutResponse(bytes);
+    };
+
+    const sendConstructed = async () => {
+        if (channel === null) {
+            return;
+        }
+
+        const bytes = [];
+        
+        bytes.push(0x55, 0x55);
+        bytes.push(...hexToBuf(constructElements.command.value));
+        bytes.push(...hexToBuf(constructElements.size.value));
+        bytes.push(...hexToBuf(constructElements.data.value));
+        bytes.push(...hexToBuf(constructElements.checksum.value));
+        bytes.push(0xaa, 0xaa);
+
+        logger(`>> ${bufToHex(bytes)}`);
+        await channel.writeValueWithoutResponse(new Uint8Array(bytes));
     };
 
     hexInput.addEventListener("keypress", async (e) => {
@@ -158,5 +206,19 @@
 
     sendHexButton.onclick = async () => {
         await sendHex();
+    };
+
+    sendConstructedButton.onclick = async () => {
+        await sendConstructed();
+    };
+
+    constructElements.data.oninput = () => {
+        const bytes = hexToBuf(constructElements.data.value);
+        constructElements.size.value = bufToHex([bytes.length]);
+        updateChecksum();
+    };
+
+    constructElements.command.oninput = () => {
+        updateChecksum();
     };
 })()

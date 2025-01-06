@@ -23,9 +23,20 @@
         <div class="row mb-3">
             <div class="col">
                 <pre class="logger p-2 border"></pre>
-                <div class="input-group input-group-sm">
+                <div class="input-group input-group-sm mb-1">
                     <input type="text" class="form-control hex-command" placeholder="Data (hex)" disabled>
                     <button class="btn btn-primary btn-sm send-hex" type="button" disabled>Send</button>
+                </div>
+
+                <div class="input-group input-group-sm">
+                    <span class="input-group-text">Construct packet</span>
+                    <input type="text" class="form-control" title="Head" disabled value="55 55">
+                    <input type="text" class="form-control construct-command" maxlength="2" title="Command" value="1A">
+                    <input type="text" class="form-control construct-size" title="Size" disabled value="01">
+                    <input type="text" class="form-control construct-data" title="Data" value="01">
+                    <input type="text" class="form-control construct-checksum" title="Checksum" disabled value="1A">
+                    <input type="text" class="form-control" title="Tail" disabled value="AA AA">
+                    <button class="btn btn-primary btn-sm send-construct" type="button" disabled>Send</button>
                 </div>
             </div>
         </div>
