@@ -23,12 +23,26 @@
         <div class="row mb-3">
             <div class="col">
                 <pre class="logger p-2 border"></pre>
+
                 <div class="input-group input-group-sm mb-1">
-                    <input type="text" class="form-control hex-command" placeholder="Data (hex)" disabled>
-                    <button class="btn btn-primary btn-sm send-hex" type="button" disabled>Send</button>
+                    <input type="text" class="form-control hex-command" placeholder="Data (hex)">
+
+                    <div class="btn-group btn-group-sm">
+                        <button type="button" class="btn btn-primary send-hex" disabled>Send</button>
+                        <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown">
+                          <span class="visually-hidden">Toggle Dropdown</span>
+                        </button>
+                        <ul class="dropdown-menu save-raw-macro">
+                            <li><h6 class="dropdown-header">Save as macro</h6></li>
+                            <li class="macro">
+                                <a class="dropdown-item macro-link" href="#">M1</a>
+                            </li>
+                        </ul>
+                    </div>
+
                 </div>
 
-                <div class="input-group input-group-sm">
+                <div class="input-group input-group-sm mb-1">
                     <span class="input-group-text">Construct packet</span>
                     <input type="text" class="form-control" title="Head" disabled value="55 55">
                     <input type="text" class="form-control construct-command" maxlength="2" title="Command" value="1A">
@@ -36,7 +50,23 @@
                     <input type="text" class="form-control construct-data" title="Data" value="01">
                     <input type="text" class="form-control construct-checksum" title="Checksum" disabled value="1A">
                     <input type="text" class="form-control" title="Tail" disabled value="AA AA">
-                    <button class="btn btn-primary btn-sm send-construct" type="button" disabled>Send</button>
+
+                    <div class="btn-group btn-group-sm">
+                        <button type="button" class="btn btn-primary send-construct" disabled>Send</button>
+                        <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown">
+                          <span class="visually-hidden">Toggle Dropdown</span>
+                        </button>
+                        <ul class="dropdown-menu save-construct-macro">
+                            <li><h6 class="dropdown-header">Save as macro</h6></li>
+                            <li class="macro">
+                                <a class="dropdown-item macro-link" href="#">M1</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="macros d-flex flex-wrap gap-1">
+                    <button class="btn btn-primary btn-sm send-macro" type="button" disabled>M1</button>
                 </div>
             </div>
         </div>
