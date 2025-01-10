@@ -9,6 +9,7 @@
     const sendConstructedButton = document.querySelector('.send-construct');
     const hexInput = document.querySelector('.hex-command');
     const macrosContainer = document.querySelector('.macros');
+    const decode = document.querySelector('#decode');
 
     const constructElements = {
         size: document.querySelector('.construct-size'),
@@ -126,8 +127,11 @@
     };
 
     const onPacket = (dw) => {
-        logger(`<< ${bufToHex(dw)}`);
-        logger(`<S ${bufToString(dw)}`);
+        let msg = `<< ${bufToHex(dw)}`;
+        if (decode.checked) {
+            msg += ` (${bufToString(dw)})`;
+        }
+        logger(msg);
     };
 
     const disconnect = () => {
