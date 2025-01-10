@@ -234,7 +234,7 @@
         bytes.push(...hexToBuf(constructElements.checksum.value));
         bytes.push(0xaa, 0xaa);
 
-        return bytes;
+        return new Uint8Array(bytes);
     }
 
     hexInput.addEventListener("keypress", async (e) => {
