@@ -153,8 +153,17 @@
     const connect = async () => {
         const options = {
             filters: [
+                { namePrefix: "A" },
                 { namePrefix: "B" },
                 { namePrefix: "D" },
+                { namePrefix: "M" },
+                { namePrefix: "E" },
+                { namePrefix: "A" },
+                { namePrefix: "H" },
+                { namePrefix: "K" },
+                { namePrefix: "N" },
+                { namePrefix: "S" },
+                { namePrefix: "T" },
                 { services: [SERVICE_UUID] }
             ]
         };
